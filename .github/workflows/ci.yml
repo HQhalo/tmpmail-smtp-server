@@ -42,13 +42,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=branch,pattern=main
-            type=sha
-            type=ref,ref=refs/tags/v*
-          labels: |
-            org.opencontainers.image.version=${GITHUB_REF#refs/tags/}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=${{ github.repository }}
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=sha,format=short
       
       - name: Build and push Docker image
         id: push
