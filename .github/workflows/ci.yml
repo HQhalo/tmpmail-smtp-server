@@ -41,6 +41,14 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,ref=refs/heads/main
+            type=sha
+            type=ref,ref=refs/tags/v*
+          labels: |
+            org.opencontainers.image.version=${GITHUB_REF#refs/tags/}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.repository }}
       
       - name: Build and push Docker image
         id: push
