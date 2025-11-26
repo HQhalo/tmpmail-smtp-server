@@ -42,7 +42,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,ref=refs/heads/main
+            type=branch,pattern=main
             type=sha
             type=ref,ref=refs/tags/v*
           labels: |
