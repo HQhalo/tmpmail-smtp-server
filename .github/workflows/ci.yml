@@ -84,7 +84,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITOPS_PAT }}
-          path: gitops
+          path: tmpmail-deployment
           commit-message: "Update tmpmail smtp server image to ${{ needs.build-and-push-image.outputs.image_tag }}"
           title: "Update tmpmail smtp server image to ${{ needs.build-and-push-image.outputs.image_tag }}"
           body: |
