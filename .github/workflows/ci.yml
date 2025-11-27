@@ -66,7 +66,7 @@ jobs:
   gitops-pr:
     needs: build-and-push-image
     runs-on: ubuntu-latest
-    # if: github.event_name == 'push'
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout GitOps repo
@@ -80,15 +80,15 @@ jobs:
         run: |
           echo "Updating image: ${{ needs.build-and-push-image.outputs.image_name }}:${{ needs.build-and-push-image.outputs.image_tag }}"
           yq e -i ".images[0].newTag = \"${{ needs.build-and-push-image.outputs.image_tag }}\"" tmpmail-deployment/tmpmail-smtp-server/dev/kustomization.yaml
-      # - name: Create Pull Request to GitOps repo
-      #   uses: peter-evans/create-pull-request@v6
-      #   with:
-      #     token: ${{ secrets.GITOPS_PAT }}
-      #     path: gitops
-      #     commit-message: "Update tmpmail smtp image to ${{ needs.build-and-push-image.outputs.image_tag }}"
-      #     title: "Update tmpmail smtp image to ${{ needs.build-and-push-image.outputs.image_tag }}"
-      #     body: |
-      #       Auto-generated PR to update tmpmail smtp deployment.
-      #       New image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push-image.outputs.image_tag }}
-      #     branch: update-tmpmail-${{ needs.build-and-push-image.outputs.image_tag }}
-      #     base: main
+      - name: Create Pull Request to GitOps repo
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITOPS_PAT }}
+          path: gitops
+          commit-message: "Update tmpmail smtp server image to ${{ needs.build-and-push-image.outputs.image_tag }}"
+          title: "Update tmpmail smtp server image to ${{ needs.build-and-push-image.outputs.image_tag }}"
+          body: |
+            Auto-generated PR to update tmpmail smtp server deployment.
+            New image: ${{ needs.build-and-push-image.outputs.image_name }}:${{ needs.build-and-push-image.outputs.image_tag }}
+          branch: update-tmpmail-${{ needs.build-and-push-image.outputs.image_tag }}
+          base: main
