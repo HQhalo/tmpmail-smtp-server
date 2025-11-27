@@ -23,7 +23,7 @@ export class Smtp {
   }
 
   async start(port: number, ){
-    this.logger.log(`Starting SMTP sever at port ${port}`);
+    this.logger.log(`🚀 Starting SMTP sever at port ${port}`);
     return this.server.listen(port, "0.0.0.0");
   }
 
