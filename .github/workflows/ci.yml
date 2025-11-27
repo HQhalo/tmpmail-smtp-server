@@ -74,6 +74,8 @@ jobs:
 
       - name: Update deployment manifest with new image tag
         run: |
+          echo ${{ needs.build-and-push-image.outputs }}
+          echo "IMAGE_NAME=$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push-image.outputs.image_tag }}"
           echo "Updating image:$IMAGE_TAG"
           yq e -i ".images[0].newTag = \"${{ needs.build-and-push-image.outputs.image_tag }}\"" tmpmail-deployment/tmpmail-smtp-server/dev/kustomization.yaml
