@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.meta.outputs.version }}
+      image_name: ${{ env.IMAGE_NAME }}
       
     permissions:
       contents: read
@@ -77,13 +78,8 @@ jobs:
 
       - name: Update deployment manifest with new image tag
         run: |
-          echo "IMAGE_NAME=$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "${{ needs.build-and-push-image.outputs.image_tag }}"
-          echo "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-and-push-image.outputs.image_tag }}"
-          echo "Updating image:$IMAGE_TAG"
+          echo "Updating image: ${{ needs.build-and-push-image.outputs.image_name }}:${{ needs.build-and-push-image.outputs.image_tag }}"
           yq e -i ".images[0].newTag = \"${{ needs.build-and-push-image.outputs.image_tag }}\"" tmpmail-deployment/tmpmail-smtp-server/dev/kustomization.yaml
-          cat tmpmail-deployment/tmpmail-smtp-server/dev/kustomization.yaml
       # - name: Create Pull Request to GitOps repo
       #   uses: peter-evans/create-pull-request@v6
       #   with:
